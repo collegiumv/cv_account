@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from flask import Flask, request
-import logging, csv, json
+import logging, csv, json, validate
 
 app = Flask(__name__)
 app.debug = True
@@ -11,11 +11,8 @@ def version():
     return "CV Account System - Version 0.0.1"
 
 @app.route("/ums/validate/netID/<netID>")
-def validateNetID(netID):
-    if any(netID in acct for acct in users):
-        return "valid NETID"
-    else:
-        return "bad NETID"
+def realtimeNetID(netID):
+    return json.dumps(validate.netID(users, netID))
 
 @app.route("/ums/validate/uname/<user>")
 def validateUser(user):
@@ -28,9 +25,10 @@ def init():
         accounts=csv.reader(f)
         for account in accounts:
             users.append(account)
-        return users
+        validate = validate.Validation(users)
+        return validate
 
 if __name__=="__main__":
     logging.basicConfig(level=logging.DEBUG)
-    users = init()
+    validate = init()
     app.run(host='0.0.0.0')
