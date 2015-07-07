@@ -34,19 +34,24 @@ def realtimeUsername(user):
     return json.dumps(validate.user(user))
 
 @app.route("/ums/provision/<netID>/<user>/")
-def provision1(netID, user):
+def IDConfirm(netID, user):
     if validate.netID(netID) and validate.user(user):
         handshake.send(netID, user)
     return json.dumps(True)
 
-@app.route("/ums/provision/<netID>/<user>/<hmac>/")
-def provision2(netID, user, hmac):
-    pass
+@app.route("/ums/provision/<netID>/<user>/<hmac>/<time>/")
+def provisionAcct(netID, user, hmac, time):
+    if json.dumps(handshake.verify(netID, user, hmac, time)):
+        return "Account provisioned"
 
 if __name__=="__main__":
+    pretzel="c"
+    addr="localhost:5000"
+    shakeTime=3600
+    
     logging.basicConfig(level=logging.DEBUG)
     loungeACL = init()
     validate = validate.Validate(loungeACL)
-    handshake = handshake.Handshake(loungeACL, "c")
+    handshake = handshake.Handshake(loungeACL, pretzel, addr, shakeTime)
     acctMgr = accountServices.Manager(loungeACL)
     app.run(host='0.0.0.0')
