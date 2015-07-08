@@ -1,15 +1,26 @@
-import logging, hmac, time
+import logging, hmac, time, smtplib
+from email.mime.text import MIMEText
 
 class Handshake:
     def __init__(self, config):
         self.loungeACL = config["ACL"]
         self.pretzel = config["SETTINGS"]["pretzel"]
         self.serverAddr = config["SETTINGS"]["serverAddr"]
+        self.replyTo = config["SETTINGS"]["replyTo"]
+        self.smtpServer = config["SETTINGS"]["smptServer"]
+        self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.window = config["SETTINGS"]["HMACWindow"]
         self.logger = logging.getLogger("Handshake")
 
-    def send(self, netID, user):
-        self.createLink(netID, user)
+    def send(self, netID, user, create=True):
+        link=self.createLink(netID, user)
+        address = netID + "@" + self.mailDomain
+        if create:
+            message = "Please use the link below to create your CV Account:\n"+ link
+        else:
+            message = "Please use the link below to reset your CV Password:\n" + link
+
+        self.sendMail(address, "CV Account Management", message)
 
     def createLink(self, netID, user):
         validFrom = time.time()
@@ -17,6 +28,7 @@ class Handshake:
         userHMAC = hmac.new(str(self.pretzel), message).hexdigest()
         url = "http://{0}/ums/provision/{1}/{2}/{3}/{4}/".format(self.serverAddr, netID, user, userHMAC, validFrom)
         self.logger.debug("Composed %s's URL: %s", netID, url)
+        return url
 
     def verify(self, netID, user, userHMAC, linkTime):
         if time.time()-float(linkTime) < self.window:
@@ -36,5 +48,17 @@ class Handshake:
             self.logger.warning("%s used an outdated link", netID)
             return False
 
-    def sendMail(self, link, netID):
-        pass
+    def sendMail(self, address, subject, content):
+        msg=MIMEText(content)
+        msg['Subject']=subject
+        msg['From']=self.replyTo
+        msg['To']=address
+
+        s = smtplib.SMTP(self.smtpServer)
+        s.sendmail(self.replyTo, address, msg.as_string())
+        s.quit()
+
+
+    def sendPassword(self, netID, password):
+        message = "Your CV password has been set to: " + password + "."
+        self.sendMail(netID+"@"+self.mailDomain, "CV Account System", message)

@@ -21,6 +21,10 @@ def init():
             logging.debug("Loaded account record %s", account)
             config["ACL"][account[2]] = [account[1], account[0]]
 
+    with open('words.txt','r') as f:
+        config["WORDS"] = f.read().split("\n")
+        logging.info("Loaded %s words", len(config["WORDS"]))
+
     with open('settings.json', 'r') as f:
         config.update(json.load(f))
         logging.info("Loaded config file")
@@ -48,7 +52,10 @@ def IDConfirm(netID, user):
 @app.route("/ums/provision/<netID>/<user>/<hmac>/<time>/")
 def provisionAcct(netID, user, hmac, time):
     if json.dumps(handshake.verify(netID, user, hmac, time)):
-        return "Account provisioned"
+        password = acctMgr.mkPassword()
+        if acctMgr.provision(netID, user, password):
+            handshake.sendPassword(netID, password)
+    return "Account provisioned"
 
 if __name__=="__main__":
     logging.basicConfig(level=logging.DEBUG)
@@ -56,4 +63,7 @@ if __name__=="__main__":
     validate = validate.Validate(config)
     handshake = handshake.Handshake(config)
     acctMgr = accountServices.Manager(config)
-    app.run(host='0.0.0.0')
+
+    host = config["SETTINGS"]["serverAddr"].split(":")[0]
+    port = int(config["SETTINGS"]["serverAddr"].split(":")[1]) or 5000
+    app.run(host, port)
