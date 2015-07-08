@@ -1,0 +1,7 @@
+{
+    "SETTINGS":{
+	"pretzel":"a",
+	"serverAddr":"localhost:5000",
+	"HMACWindow":3600
+    }
+}

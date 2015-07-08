@@ -7,7 +7,8 @@ app = Flask(__name__)
 app.debug = True
 
 def init():
-    users=dict()
+    config = dict()
+    config["ACL"]=dict()
     with open('account_access.list','r') as f:
         accounts=csv.reader(f)
         for account in accounts:
@@ -18,8 +19,13 @@ def init():
                 logging.debug("Drop comment %s", account)
                 continue
             logging.debug("Loaded account record %s", account)
-            users[account[2]] = [account[1], account[0]]
-        return users
+            config["ACL"][account[2]] = [account[1], account[0]]
+
+    with open('settings.json', 'r') as f:
+        config.update(json.load(f))
+        logging.info("Loaded config file")
+
+    return config
 
 @app.route("/")
 def version():
@@ -45,13 +51,9 @@ def provisionAcct(netID, user, hmac, time):
         return "Account provisioned"
 
 if __name__=="__main__":
-    pretzel="c"
-    addr="localhost:5000"
-    shakeTime=3600
-    
     logging.basicConfig(level=logging.DEBUG)
-    loungeACL = init()
-    validate = validate.Validate(loungeACL)
-    handshake = handshake.Handshake(loungeACL, pretzel, addr, shakeTime)
-    acctMgr = accountServices.Manager(loungeACL)
+    config = init()
+    validate = validate.Validate(config)
+    handshake = handshake.Handshake(config)
+    acctMgr = accountServices.Manager(config)
     app.run(host='0.0.0.0')

@@ -1,8 +1,8 @@
 import logging, re
 
 class Validate:
-    def __init__(self, loungeACL):
-        self.loungeACL = loungeACL
+    def __init__(self, config):
+        self.loungeACL = config["ACL"]
     
     def netID(self, netID):
         if netID in self.loungeACL:

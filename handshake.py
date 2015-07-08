@@ -1,12 +1,12 @@
 import logging, hmac, time
 
 class Handshake:
-    def __init__(self, loungeACL, pretzel, serverAddr, window):
-        self.loungeACL = loungeACL
-        self.pretzel = pretzel
-        self.serverAddr = serverAddr
+    def __init__(self, config):
+        self.loungeACL = config["ACL"]
+        self.pretzel = config["SETTINGS"]["pretzel"]
+        self.serverAddr = config["SETTINGS"]["serverAddr"]
+        self.window = config["SETTINGS"]["HMACWindow"]
         self.logger = logging.getLogger("Handshake")
-        self.window = window
 
     def send(self, netID, user):
         self.createLink(netID, user)
@@ -14,7 +14,7 @@ class Handshake:
     def createLink(self, netID, user):
         validFrom = time.time()
         message = netID+user+str(validFrom)
-        userHMAC = hmac.new(self.pretzel, message).hexdigest()
+        userHMAC = hmac.new(str(self.pretzel), message).hexdigest()
         url = "http://{0}/ums/provision/{1}/{2}/{3}/{4}/".format(self.serverAddr, netID, user, userHMAC, validFrom)
         self.logger.debug("Composed %s's URL: %s", netID, url)
 
@@ -23,7 +23,7 @@ class Handshake:
 
             validFrom = linkTime
             message = netID+user+str(validFrom)
-            validHMAC = unicode(hmac.new(self.pretzel, message).hexdigest())
+            validHMAC = unicode(hmac.new(str(self.pretzel), message).hexdigest())
             self.logger.debug("valid: %s", validHMAC)
             self.logger.debug("user: %s", userHMAC)
             if hmac.compare_digest(userHMAC, validHMAC):
@@ -35,3 +35,6 @@ class Handshake:
         else:
             self.logger.warning("%s used an outdated link", netID)
             return False
+
+    def sendMail(self, link, netID):
+        pass
