@@ -7,6 +7,7 @@ class Handshake:
         self.pretzel = config["SETTINGS"]["pretzel"]
         self.serverAddr = config["SETTINGS"]["serverAddr"]
         self.replyTo = config["SETTINGS"]["replyTo"]
+        self.subject = config["SETTINGS"]["subject"]
         self.smtpServer = config["SETTINGS"]["smptServer"]
         self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.window = config["SETTINGS"]["HMACWindow"]
@@ -16,11 +17,11 @@ class Handshake:
         link=self.createLink(netID, user)
         address = netID + "@" + self.mailDomain
         if create:
-            message = "Please use the link below to create your CV Account:\n"+ link
+            message = "Please use the link below to create your account:\n"+ link
         else:
-            message = "Please use the link below to reset your CV Password:\n" + link
+            message = "Please use the link below to reset your password:\n" + link
 
-        self.sendMail(address, "CV Account Management", message)
+        self.sendMail(address, message)
 
     def createLink(self, netID, user):
         validFrom = time.time()
@@ -48,9 +49,9 @@ class Handshake:
             self.logger.warning("%s used an outdated link", netID)
             return False
 
-    def sendMail(self, address, subject, content):
+    def sendMail(self, address, content):
         msg=MIMEText(content)
-        msg['Subject']=subject
+        msg['Subject']=self.subject
         msg['From']=self.replyTo
         msg['To']=address
 
@@ -58,7 +59,6 @@ class Handshake:
         s.sendmail(self.replyTo, address, msg.as_string())
         s.quit()
 
-
     def sendPassword(self, netID, password):
-        message = "Your CV password has been set to: " + password + "."
-        self.sendMail(netID+"@"+self.mailDomain, "CV Account System", message)
+        message = "Your password has been set to: " + password + "."
+        self.sendMail(netID+"@"+self.mailDomain, message)

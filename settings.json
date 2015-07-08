@@ -5,6 +5,7 @@
 	"HMACWindow":3600,
 	"replyTo":"cthulu@collegiumv.org",
 	"smptServer":"smtp.utdallas.edu",
-	"mailDomain":"utdallas.edu"
+	"mailDomain":"utdallas.edu",
+	"subject":"CV Account Management"
     }
 }
