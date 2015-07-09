@@ -6,6 +6,12 @@
 	"replyTo":"cthulu@collegiumv.org",
 	"smptServer":"smtp.utdallas.edu",
 	"mailDomain":"utdallas.edu",
-	"subject":"CV Account Management"
+	"subject":"CV Account Management",
+	"userGID":1729
+    },
+    "LDAP":{
+	"ldapAddr":"ldap://192.168.42.15",
+	"bindDN":"cn=acctService,dc=collegiumv,dc=org",
+	"bindPW":"a"
     }
 }
