@@ -2,7 +2,7 @@
     "SETTINGS":{
 	"pretzel":"a",
 	"serverAddr":"localhost:5000",
-	"HMACWindow":3600,
+	"HMACWindow":360000,
 	"replyTo":"cthulu@collegiumv.org",
 	"smptServer":"smtp.utdallas.edu",
 	"mailDomain":"utdallas.edu",
