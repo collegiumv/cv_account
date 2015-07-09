@@ -10,10 +10,10 @@ class Manager:
         self.gidNumber = config["SETTINGS"]["userGID"]
 
     def provision(self, netID, username, password):
-        fname = self.loungeACL[netID][1]
-        lname = self.loungeACL[netID][0]
+        fname = self.loungeACL[netID][0]
+        lname = self.loungeACL[netID][1]
         ObjectClass = ["inetOrgPerson", "posixAccount", "cvPerson"]
-        userDN = "cn="+username+",ou=people,dc=collegiumv,dc=org"
+        userDN = "uid="+username+",ou=people,dc=collegiumv,dc=org"
 
         #create the ldap values
         ldapAttrs = list()
@@ -22,6 +22,8 @@ class Manager:
         ldapAttrs.append(("sn",[lname]))
         ldapAttrs.append(("ou",["cv"]))
         ldapAttrs.append(("displayName",[fname + ' ' + lname]))
+        ldapAttrs.append(("givenName",[fname]))
+        ldapAttrs.append(("netID",[str(netID)]))
         ldapAttrs.append(("mail",[str(netID+'@'+self.mailDomain)]))
         ldapAttrs.append(('o',["collegiumv"]))
         ldapAttrs.append(("uid", [str(username)]))
@@ -37,6 +39,7 @@ class Manager:
             self.logger.error("An ldap error has occured, %s", e)
         finally:    
             conn.unbind()
+            self.logger.info("Sucessfully provisioned account %s for %s", username, netID)
 
     def connectLDAP(self):
         try:
