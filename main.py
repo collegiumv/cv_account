@@ -6,28 +6,33 @@ import logging, csv, json, validate, accountServices, handshake
 app = Flask(__name__)
 app.debug = True
 
+weblog = logging.getLogger('werkzeug')
+weblog.setLevel(logging.ERROR)
+
 def init():
+    configLog = logging.getLogger("config")
+
     config = dict()
     config["ACL"]=dict()
     with open('account_access.list','r') as f:
         accounts=csv.reader(f)
         for account in accounts:
             if len(account)==0:
-                logging.debug("Skipping blank line in file")
+                configLog.debug("Skipping blank line in file")
                 continue
             if any("#" in s for s in account[0]):
-                logging.debug("Drop comment %s", account)
+                configLog.debug("Drop comment %s", account)
                 continue
-            logging.debug("Loaded account record %s", account)
+            configLog.debug("Loaded account record %s", account)
             config["ACL"][account[2]] = [account[1], account[0]]
 
     with open('words.txt','r') as f:
         config["WORDS"] = f.read().split("\n")
-        logging.info("Loaded %s words", len(config["WORDS"]))
+        configLog.info("Loaded %s words", len(config["WORDS"]))
 
     with open('settings.json', 'r') as f:
         config.update(json.load(f))
-        logging.info("Loaded config file")
+        configLog.info("Loaded config file")
 
     return config
 
