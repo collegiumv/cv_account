@@ -25,7 +25,7 @@ class Manager:
         ldapAttrs.append(("givenName",[fname]))
         ldapAttrs.append(("netID",[str(netID)]))
         ldapAttrs.append(("mail",[str(netID+'@'+self.mailDomain)]))
-        ldapAttrs.append(('o',["collegiumv"]))
+        ldapAttrs.append(('o',["Collegium V"]))
         ldapAttrs.append(("uid", [str(username)]))
         ldapAttrs.append(("uidNumber", [str(self.nextUID())]))
         ldapAttrs.append(("gidNumber", [str(self.gidNumber)]))
@@ -35,11 +35,13 @@ class Manager:
         conn = self.connectLDAP()
         try:
             conn.add_s(userDN, ldapAttrs)
+            self.logger.info("Sucessfully provisioned account %s for %s", username, netID)
         except ldap.LDAPError as e:
             self.logger.error("An ldap error has occured, %s", e)
-        finally:    
+            return False
+        finally:
             conn.unbind()
-            self.logger.info("Sucessfully provisioned account %s for %s", username, netID)
+            return True
 
     def connectLDAP(self):
         try:
@@ -64,4 +66,35 @@ class Manager:
         return password
 
     def nextUID(self):
-        return 50000
+        conn = self.connectLDAP()
+        num = self.getLastuidNumber(sock=conn)
+        conn.unbind()
+        return num+1
+
+    def getLastuidNumber(self, baseNum=0, sock=None):
+        result = list()
+        searchID = sock.search("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(uidNumber>={0})".format(baseNum), attrlist=["uidNumber"])
+        while True:
+            try:
+                result.append(sock.result(searchID, all=0, timeout=2))
+            except (ldap.TIMEOUT, ldap.SIZELIMIT_EXCEEDED):
+                break
+                
+        # Get the last result, assuming the list is ordered
+        if result[-1][1]==list():
+            # this handles the timeout condition
+            lastResult = result[-2]
+        else:
+            lastResult = result[-1]
+    
+        # I sincerely appologize for this index maze, it was necessary
+        # to avoid using a large number of temp variables to store
+        # data I had no intent of using.  The end output is the last
+        # uidNumber to be returned, we assume the result set to be
+        # both well defined, and ordered, otherwise this doesn't work
+        lastUID = int(lastResult[1][0][1][lastResult[1][0][1].keys()[-1]][0])
+            
+        if lastUID > baseNum:
+            return self.getLastuidNumber(lastUID, sock)
+        else:
+            return lastUID

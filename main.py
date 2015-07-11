@@ -60,7 +60,9 @@ def provisionAcct(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.provision(netID, user, password):
             handshake.sendPassword(netID, password)
-    return "Account provisioned"
+            return "Account provisioned"
+        else:
+            return "Your account could not be provisioned at this time."
 
 if __name__=="__main__":
     logging.basicConfig(level=logging.DEBUG)

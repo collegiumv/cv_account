@@ -56,7 +56,8 @@ class Handshake:
         msg['To']=address
 
         s = smtplib.SMTP(self.smtpServer)
-        s.sendmail(self.replyTo, address, msg.as_string())
+        self.logger.debug("message: %s", content)
+        #s.sendmail(self.replyTo, address, msg.as_string())
         s.quit()
 
     def sendPassword(self, netID, password):
