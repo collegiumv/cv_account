@@ -36,8 +36,11 @@ class Manager:
         conn = self.connectLDAP()
         try:
             conn.add_s(userDN, ldapAttrs)
-            self.kadmin.createPrinc(username, password)
-            self.logger.info("Sucessfully provisioned account %s for %s", username, netID)
+            if self.kadmin.createPrinc(username, password):
+                self.logger.info("Sucessfully provisioned account %s for %s", username, netID)
+            else:
+                self.logger.error("Kerberos Error on account %s", username)
+                return False
         except ldap.LDAPError as e:
             self.logger.error("An ldap error has occured, %s", e)
             return False
