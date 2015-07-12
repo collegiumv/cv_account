@@ -13,5 +13,9 @@
 	"ldapAddr":"ldap://192.168.42.15",
 	"bindDN":"cn=acctService,dc=collegiumv,dc=org",
 	"bindPW":"a"
+    },
+    "krb5":{
+	"aprinc":"cv/admin",
+	"apass":"a"
     }
 }

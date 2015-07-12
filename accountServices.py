@@ -1,4 +1,4 @@
-import logging, random, ldap
+import logging, random, ldap, kadmin
 
 class Manager:
     def __init__(self, config):
@@ -6,6 +6,7 @@ class Manager:
         self.config = config
         self.words = config["WORDS"]
         self.logger = logging.getLogger("AcctServices")
+        self.kadmin = kadmin.KAdmin(config["krb5"]["aprinc"], config["krb5"]["apass"])
         self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.gidNumber = config["SETTINGS"]["userGID"]
 
@@ -35,6 +36,7 @@ class Manager:
         conn = self.connectLDAP()
         try:
             conn.add_s(userDN, ldapAttrs)
+            self.kadmin.createPrinc(username, password)
             self.logger.info("Sucessfully provisioned account %s for %s", username, netID)
         except ldap.LDAPError as e:
             self.logger.error("An ldap error has occured, %s", e)
@@ -58,6 +60,9 @@ class Manager:
         except:
             self.logger.error("An unidentified error occured in LDAP")
         return conn
+
+    def chPassword(self, username, password):
+        return self.kadmin.changePW(username, password)
 
     def mkPassword(self):
         password=""
