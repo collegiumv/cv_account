@@ -99,7 +99,7 @@ function changeListener(){
 
 function changePassword(){
     var url = '/ums/changePassword/' + netID.val()
-    httpRequest.get( url, function(result){
+    httpClient.get( url, function(result){
 	if( result == true ){
 	    $('#success').show()
 	    $('#fail').hide()
@@ -112,7 +112,7 @@ function changePassword(){
 
 function createAccount(){
     var url = '/ums/provision/' + netID.val() + "/" + username.val()
-    httpRequest.get( url, function(result){
+    httpClient.get( url, function(result){
 	if( result == true ){
 	    $('#success').show()
 	    $('#fail').hide()

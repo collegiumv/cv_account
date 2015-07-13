@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-<form>
+
 	<h4 id="success">Please check your UT Dallas email for further Instructions</h4>
 	<h4 id="fail">An error occurred. Please contact cvadmins@utdallas.edu or try again later</h4>
 	<div id="netid" >
@@ -16,7 +16,7 @@
 		<input type="text" id="username" placeholder="foobar" value="username" >
 		<input type="submit" id="provisionButton" class="button" value="Create Account" onclick="createAccount()">
 	</div>
-</form>
+
 <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 <script src={{ url_for('static', filename='js/account.js') }}></script>
 {% endblock %}
