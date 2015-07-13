@@ -10,6 +10,13 @@ class Manager:
         self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.gidNumber = config["SETTINGS"]["userGID"]
 
+
+    def checkAccount(self, username):
+        conn = self.connectLDAP()
+        result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(uid={0})".format(username), attrlist=["uid"])
+        conn.unbind()
+        print result
+        
     def provision(self, netID, username, password):
         fname = self.loungeACL[netID][0]
         lname = self.loungeACL[netID][1]

@@ -64,6 +64,11 @@ def provisionAcct(netID, user, hmac, time):
         else:
             return "Your account could not be provisioned at this time."
 
+
+@app.route("/exists/<username>")
+def exists(username):
+    return json.dumps(acctMgr.checkAccount(username))
+
 if __name__=="__main__":
     logging.basicConfig(level=logging.DEBUG)
     config = init()
