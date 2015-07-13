@@ -57,6 +57,13 @@ def realtimeNetID(netID):
 def realtimeUsername(user):
     return json.dumps(validate.user(user))
 
+@app.route("/ums/validate/exists/byNetID/<netID>")
+def accountByNetID(netID):
+    return json.dumps(acctMgr.netIDExists(netID))
+
+@app.route("/ums/validate/exists/byUID/<uid>")
+def accountByUID(uid):
+    return json.dumps(acctMgr.uidExists(uid))
 
 @app.route("/ums/provision/<netID>/<user>/")
 def IDConfirm(netID, user):

@@ -11,11 +11,19 @@ class Manager:
         self.gidNumber = config["SETTINGS"]["userGID"]
 
 
-    def checkAccount(self, username):
+    def uidExists(self, username):
         conn = self.connectLDAP()
         result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(uid={0})".format(username), attrlist=["uid"])
         conn.unbind()
-        print result
+        self.logger.debug("Account %s exists? %s", username, bool(len(result)))
+        return bool(len(result))
+
+    def netIDExists(self, netID):
+        conn = self.connectLDAP()
+        result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(netID={0})".format(netID), attrlist=["netID"])
+        conn.unbind()
+        self.logger.debug("Account %s exists? %s", netID, bool(len(result)))
+        return bool(len(result))
         
     def provision(self, netID, username, password):
         fname = self.loungeACL[netID][0]
