@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask
+from flask import Flask, render_template
 import logging
 import csv
 import json
@@ -44,6 +44,9 @@ def init():
 
 
 @app.route("/")
+def index():
+    return render_template('index.html')
+
 def version():
     return "CV Account System - Version 0.0.1"
 
@@ -57,13 +60,16 @@ def realtimeNetID(netID):
 def realtimeUsername(user):
     return json.dumps(validate.user(user))
 
+
 @app.route("/ums/validate/exists/byNetID/<netID>")
 def accountByNetID(netID):
     return json.dumps(acctMgr.netIDExists(netID))
 
+
 @app.route("/ums/validate/exists/byUID/<uid>")
 def accountByUID(uid):
     return json.dumps(acctMgr.uidExists(uid))
+
 
 @app.route("/ums/provision/<netID>/<user>/")
 def IDConfirm(netID, user):
@@ -81,6 +87,7 @@ def provisionAcct(netID, user, hmac, time):
             return "Account provisioned"
         else:
             return "Your account could not be provisioned at this time."
+
 
 @app.route("/exists/<username>")
 def exists(username):

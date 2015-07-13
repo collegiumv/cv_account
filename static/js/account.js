@@ -5,12 +5,12 @@ var HttpRequest = function() {
     this.get = function(Url, Callback) {
 	var HttpRequest = new XMLHttpRequest();
 	HttpRequest.onreadystatechange = function() {
-	    if (HttpRequest.readyState == 4 && anHttpRequest.status == 200)
-		Callback(anHttpRequest.responseText);
+	    if (HttpRequest.readyState == 4 && HttpRequest.status == 200)
+		Callback(HttpRequest.responseText);
 	}
 
-	anHttpRequest.open( "GET", aUrl, true );
-	anHttpRequest.send( null );
+	HttpRequest.open( "GET", Url, true );
+	HttpRequest.send( null );
     }
 }
 
@@ -122,7 +122,7 @@ function createAccount(){
     })
 }
 
-setInterval(InputChangeListener, 500);
+setInterval(changeListener, 500);
 
 $('#changePassword').hide()
 $('#provisionAccount').hide()
