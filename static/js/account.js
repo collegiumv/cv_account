@@ -23,6 +23,7 @@ netID.change(function(){
     httpClient.get( url, function(result){
 	if( result == 'false' ) {
 	    netID.addClass('errorClass')
+	    $('#provisionButton').hide()
 
 	    $('#changePassword').hide()
 	    $('#provisionAccount').hide()
@@ -54,7 +55,7 @@ username.change(function(){
     var url = '/ums/validate/uname/' + username.val()
     httpClient.get( url, function(result){
 	if( result == 'false' ) {
-	    usename.addClass('errorClass')
+	    username.addClass('errorClass')
 
 	    $('#provisionButton').hide()
 	}
