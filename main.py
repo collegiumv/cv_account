@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 
-from flask import Flask, request
-import logging, csv, json, validate, accountServices, handshake
+from flask import Flask
+import logging
+import csv
+import json
+import validate
+import accountServices
+import handshake
 
 app = Flask(__name__)
 app.debug = True
@@ -9,15 +14,16 @@ app.debug = True
 weblog = logging.getLogger('werkzeug')
 weblog.setLevel(logging.ERROR)
 
+
 def init():
     configLog = logging.getLogger("config")
 
     config = dict()
-    config["ACL"]=dict()
-    with open('account_access.list','r') as f:
-        accounts=csv.reader(f)
+    config["ACL"] = dict()
+    with open('account_access.list', 'r') as f:
+        accounts = csv.reader(f)
         for account in accounts:
-            if len(account)==0:
+            if len(account) == 0:
                 configLog.debug("Skipping blank line in file")
                 continue
             if any("#" in s for s in account[0]):
@@ -26,7 +32,7 @@ def init():
             configLog.debug("Loaded account record %s", account)
             config["ACL"][account[2]] = [account[1], account[0]]
 
-    with open('words.txt','r') as f:
+    with open('words.txt', 'r') as f:
         config["WORDS"] = f.read().split("\n")
         configLog.info("Loaded %s words", len(config["WORDS"]))
 
@@ -36,17 +42,21 @@ def init():
 
     return config
 
+
 @app.route("/")
 def version():
     return "CV Account System - Version 0.0.1"
+
 
 @app.route("/ums/validate/netID/<netID>")
 def realtimeNetID(netID):
     return json.dumps(validate.netID(netID))
 
+
 @app.route("/ums/validate/uname/<user>")
 def realtimeUsername(user):
     return json.dumps(validate.user(user))
+
 
 @app.route("/ums/provision/<netID>/<user>/")
 def IDConfirm(netID, user):
@@ -54,9 +64,10 @@ def IDConfirm(netID, user):
         handshake.send(netID, user)
     return json.dumps(True)
 
+
 @app.route("/ums/provision/<netID>/<user>/<hmac>/<time>/")
 def provisionAcct(netID, user, hmac, time):
-    if json.dumps(handshake.verify(netID, user, hmac, time)):
+    if handshake.verify(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.provision(netID, user, password):
             handshake.sendPassword(netID, password)
@@ -64,12 +75,11 @@ def provisionAcct(netID, user, hmac, time):
         else:
             return "Your account could not be provisioned at this time."
 
-
 @app.route("/exists/<username>")
 def exists(username):
     return json.dumps(acctMgr.checkAccount(username))
 
-if __name__=="__main__":
+if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     config = init()
     validate = validate.Validate(config)
