@@ -1,0 +1,16 @@
+<!doctype html>
+<head>
+	<title>CV Accounts Webpage</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+	<div id="container">
+		<div id="header"></div>
+		<div id="main" >
+			<div id="content" >
+				{% block body %}{% endblock %}
+			</div>
+		</div>
+	</div>
+</body>
