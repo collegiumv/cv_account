@@ -89,9 +89,21 @@ def provisionAcct(netID, user, hmac, time):
             return "Your account could not be provisioned at this time."
 
 
-@app.route("/exists/<username>")
-def exists(username):
-    return json.dumps(acctMgr.checkAccount(username))
+@app.route("/ums/changePassword/<netID>")
+def passwordHandshake(netID):
+    if validate.netID(netID):
+        handshake.send(netID, acctMgr.uidFromNetID(netID), False)
+        return "Check your email for instructions"
+    else:
+        return "An error occured, please contact cvadmins@utdallas.edu"
+
+@app.route("/ums/changePassword/<netID>/<user>/<hmac>/<time>/")
+def chPassword(netID, user, hmac, time):
+    if handshake.verify(netID, user, hmac, time):
+        acctMgr.chPassword(user)
+        return "Your new password has been emailed to you"
+    else:
+        return "An error occured, please contact cvadmins@utdallas.edu"
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)

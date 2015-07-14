@@ -13,7 +13,7 @@ class KAdmin:
         else:
             return True
 
-    def changePW(self, uid, password):
+    def chPassword(self, uid, password):
         cmd = ['kadmin','-p'+self.kprinc, '-q', 'cpw -pw '+password+' '+uid, '-w'+self.kpass]
         if subprocess.call(cmd, shell=False):
             return False

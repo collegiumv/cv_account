@@ -14,7 +14,7 @@ class Handshake:
         self.logger = logging.getLogger("Handshake")
 
     def send(self, netID, user, create=True):
-        link=self.createLink(netID, user)
+        link=self.createLink(netID, user, create)
         address = netID + "@" + self.mailDomain
         if create:
             message = "Please use the link below to create your account:\n"+ link
@@ -23,11 +23,14 @@ class Handshake:
 
         self.sendMail(address, message)
 
-    def createLink(self, netID, user):
+    def createLink(self, netID, user, create):
         validFrom = time.time()
         message = netID+user+str(validFrom)
         userHMAC = hmac.new(str(self.pretzel), message).hexdigest()
-        url = "http://{0}/ums/provision/{1}/{2}/{3}/{4}/".format(self.serverAddr, netID, user, userHMAC, validFrom)
+        if create:
+            url = "http://{0}/ums/provision/{1}/{2}/{3}/{4}/".format(self.serverAddr, netID, user, userHMAC, validFrom)
+        else:
+            url = "http://{0}/ums/changePassword/{1}/{2}/{3}/{4}/".format(self.serverAddr, netID, user, userHMAC, validFrom)
         self.logger.debug("Composed %s's URL: %s", netID, url)
         return url
 

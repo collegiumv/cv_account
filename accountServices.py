@@ -24,6 +24,12 @@ class Manager:
         conn.unbind()
         self.logger.debug("Account %s exists? %s", netID, bool(len(result)))
         return bool(len(result))
+
+    def uidFromNetID(self, netID):
+        conn = self.connectLDAP()
+        result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(netID={0})".format(netID), attrlist=["uid"])
+        conn.unbind()
+        return result[0][1]['uid'][0]
         
     def provision(self, netID, username, password):
         fname = self.loungeACL[netID][0]
@@ -79,8 +85,9 @@ class Manager:
             self.logger.error("An unidentified error occured in LDAP")
         return conn
 
-    def chPassword(self, username, password):
-        return self.kadmin.changePW(username, password)
+    def chPassword(self, username):
+        password = self.mkPassword()
+        return self.kadmin.chPassword(username, password)
 
     def mkPassword(self):
         password=""
