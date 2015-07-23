@@ -85,8 +85,7 @@ class Manager:
             self.logger.error("An unidentified error occured in LDAP")
         return conn
 
-    def chPassword(self, username):
-        password = self.mkPassword()
+    def chPassword(self, username, password):
         return self.kadmin.chPassword(username, password)
 
     def mkPassword(self):

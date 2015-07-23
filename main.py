@@ -100,8 +100,12 @@ def passwordHandshake(netID):
 @app.route("/ums/changePassword/<netID>/<user>/<hmac>/<time>/")
 def chPassword(netID, user, hmac, time):
     if handshake.verify(netID, user, hmac, time):
-        acctMgr.chPassword(user)
-        return "Your new password has been emailed to you"
+        password = acctMgr.mkPassword()
+        if acctMgr.chPassword(user, password):
+            handshake.sendPassword(netID, password)
+            return "Your new password has been emailed to you"
+        else:
+            return "Your password could not be changed at this time"
     else:
         return "An error occured, please contact cvadmins@utdallas.edu"
 
