@@ -7,6 +7,7 @@ import json
 import validate
 import accountServices
 import handshake
+import os
 
 app = Flask(__name__)
 app.debug = True
@@ -20,7 +21,8 @@ def init():
 
     config = dict()
     config["ACL"] = dict()
-    with open('account_access.list', 'r') as f:
+    configDir = os.path.abspath("config")
+    with open(os.path.join(configDir, "account_access.list"), 'r') as f:
         accounts = csv.reader(f)
         for account in accounts:
             if len(account) == 0:
@@ -32,11 +34,11 @@ def init():
             configLog.debug("Loaded account record %s", account)
             config["ACL"][account[2]] = [account[1], account[0]]
 
-    with open('words.txt', 'r') as f:
+    with open(os.path.join(configDir, "words.txt"), 'r') as f:
         config["WORDS"] = f.read().split("\n")
         configLog.info("Loaded %s words", len(config["WORDS"]))
 
-    with open('settings.json', 'r') as f:
+    with open(os.path.join(configDir, "settings.json"), 'r') as f:
         config.update(json.load(f))
         configLog.info("Loaded config file")
 
@@ -46,6 +48,7 @@ def init():
 @app.route("/")
 def index():
     return render_template('index.html')
+
 
 def version():
     return "CV Account System - Version 0.0.1"
@@ -97,6 +100,7 @@ def passwordHandshake(netID):
     else:
         return "An error occured, please contact cvadmins@utdallas.edu"
 
+
 @app.route("/ums/changePassword/<netID>/<user>/<hmac>/<time>/")
 def chPassword(netID, user, hmac, time):
     if handshake.verify(netID, user, hmac, time):
@@ -110,7 +114,11 @@ def chPassword(netID, user, hmac, time):
         return "An error occured, please contact cvadmins@utdallas.edu"
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    if not os.path.isdir("log"):
+        os.mkdir("log")
+
+    logfile = os.path.join(os.path.abspath("log"), "accountService.log")
+    logging.basicConfig(level=logging.INFO, filename=logfile)
     config = init()
     validate = validate.Validate(config)
     handshake = handshake.Handshake(config)
