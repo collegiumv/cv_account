@@ -36,7 +36,7 @@ def init():
         configLog.info("Loaded %s account records", len(config["ACL"]))
         
     with open(os.path.join(configDir, "words.txt"), 'r') as f:
-        config["WORDS"] = f.read().split("\n")
+        config["WORDS"] = f.read().split("\n").strip()
         configLog.info("Loaded %s words", len(config["WORDS"]))
 
     with open(os.path.join(configDir, "settings.json"), 'r') as f:
@@ -107,11 +107,11 @@ def chPassword(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.chPassword(user, password):
             handshake.sendPassword(netID, password)
-            return json.dumps(True)
+            return "Your password has been emailed to you"
         else:
-            return json.dumps(False)
+            return "Your password could not be reset, please try again later"
     else:
-        return json.dumps(False)
+        return "An error occured, perhaps you have an old link?"
 
 if __name__ == "__main__":
     if not os.path.isdir("log"):
