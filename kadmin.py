@@ -13,19 +13,14 @@ class KAdmin:
         FNULL = open(os.devnull, 'w')
 
         cmd = ['kadmin','-p'+self.kprinc, '-q', 'addprinc -pw '+password+' '+uid, '-w'+self.kpass]
-        if subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL):
-            return False
-        else:
-            return True
+        return not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL))
+
 
     def chPassword(self, uid, password):
         FNULL = open(os.devnull, 'w')
 
         cmd = ['kadmin','-p'+self.kprinc, '-q', 'cpw -pw '+password+' '+uid, '-w'+self.kpass]
-        if subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL):
-            return False
-        else:
-            return True
+        return not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL))
 
 if __name__ == "__main__":
     o = KAdmin("cv/admin", "a")

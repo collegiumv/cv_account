@@ -89,6 +89,7 @@ class Manager:
         return self.kadmin.chPassword(username, password)
 
     def mkPassword(self):
+        self.logger.debug("Made a password")
         password=""
         for i in range(0,4):
             password += random.choice(self.words).capitalize()
