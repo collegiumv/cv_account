@@ -22,7 +22,7 @@ def init():
     config = dict()
     config["ACL"] = dict()
     configDir = os.path.abspath("config")
-    with open(os.path.join(configDir, "account_access.list"), 'r') as f:
+    with open(os.path.join(configDir, "access.list"), 'r') as f:
         accounts = csv.reader(f)
         for account in accounts:
             if len(account) == 0:
