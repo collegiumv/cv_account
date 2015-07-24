@@ -5,7 +5,7 @@ class Handshake:
     def __init__(self, config):
         self.loungeACL = config["ACL"]
         self.pretzel = config["SETTINGS"]["pretzel"]
-        self.serverAddr = config["SETTINGS"]["serverAddr"]
+        self.serverAddr = config["SETTINGS"]["serverLink"]
         self.replyTo = config["SETTINGS"]["replyTo"]
         self.subject = config["SETTINGS"]["subject"]
         self.smtpServer = config["SETTINGS"]["smptServer"]
