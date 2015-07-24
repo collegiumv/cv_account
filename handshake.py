@@ -42,7 +42,8 @@ class Handshake:
             validHMAC = unicode(hmac.new(str(self.pretzel), message).hexdigest())
             self.logger.debug("valid: %s", validHMAC)
             self.logger.debug("user: %s", userHMAC)
-            if hmac.compare_digest(userHMAC, validHMAC):
+            # This is a hack until ubuntu updates thier python
+            if self.compDigest(userHMAC, validHMAC):
                 self.logger.debug("HMAC from %s valid", netID)
                 return True
             else:
@@ -66,3 +67,9 @@ class Handshake:
     def sendPassword(self, netID, password):
         message = "Your password has been set to: " + password + "."
         self.sendMail(netID+"@"+self.mailDomain, message)
+
+    def compDigest(self, a, b):
+        same=False
+        for i in range(len(b)):
+            same |= (a[i] != b[i])
+        return not same
