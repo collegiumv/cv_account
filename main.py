@@ -10,7 +10,7 @@ import handshake
 import os
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 
 weblog = logging.getLogger('werkzeug')
 weblog.setLevel(logging.ERROR)
