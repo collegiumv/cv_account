@@ -88,19 +88,18 @@ def provisionAcct(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.provision(netID, user, password):
             handshake.sendPassword(netID, password)
-            return "Account provisioned"
+            return json.dumps(True)
         else:
-            return "Your account could not be provisioned at this time."
+            return json.dumps(False)
 
 
 @app.route("/ums/changePassword/<netID>")
 def passwordHandshake(netID):
     if validate.netID(netID):
         handshake.send(netID, acctMgr.uidFromNetID(netID), False)
-        return "Check your email for instructions"
+        return json.dumps(True)
     else:
-        return "An error occured, please contact cvadmins@utdallas.edu"
-
+        return json.dumps(False)
 
 @app.route("/ums/changePassword/<netID>/<user>/<hmac>/<time>/")
 def chPassword(netID, user, hmac, time):
@@ -108,11 +107,11 @@ def chPassword(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.chPassword(user, password):
             handshake.sendPassword(netID, password)
-            return "Your new password has been emailed to you"
+            return json.dumps(True)
         else:
-            return "Your password could not be changed at this time"
+            return json.dumps(False)
     else:
-        return "An error occured, please contact cvadmins@utdallas.edu"
+        return json.dumps(False)
 
 if __name__ == "__main__":
     if not os.path.isdir("log"):
