@@ -18,6 +18,11 @@ httpClient = new HttpRequest()
 
 netID.change(function(){
     $('#username').val('');
+    if (netID.val() == ''){
+	$('#provisionButton').hide()
+	$('#changePassword').hide()
+	$('#provisionAccount').hide()
+    }
 
     var url = '/ums/validate/netID/' + netID.val()
     httpClient.get( url, function(result){
@@ -53,6 +58,10 @@ netID.change(function(){
 
 username.change(function(){
     var url = '/ums/validate/uname/' + username.val()
+    if (username.val() == ''){
+	$('#provisionButton').hide()
+	$('#usernameTaken').show()
+    }
     httpClient.get( url, function(result){
 	if( result == 'false' ) {
 	    username.addClass('errorClass')
