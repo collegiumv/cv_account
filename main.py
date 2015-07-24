@@ -36,7 +36,7 @@ def init():
         configLog.info("Loaded %s account records", len(config["ACL"]))
         
     with open(os.path.join(configDir, "words.txt"), 'r') as f:
-        config["WORDS"] = f.read().split("\n").strip()
+        config["WORDS"] = [ s.strip() for s in f.read().split("\n") ]
         configLog.info("Loaded %s words", len(config["WORDS"]))
 
     with open(os.path.join(configDir, "settings.json"), 'r') as f:
