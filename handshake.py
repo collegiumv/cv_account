@@ -60,7 +60,7 @@ class Handshake:
 
         s = smtplib.SMTP(self.smtpServer)
         self.logger.debug("message: %s", content)
-        #s.sendmail(self.replyTo, address, msg.as_string())
+        s.sendmail(self.replyTo, address, msg.as_string())
         s.quit()
 
     def sendPassword(self, netID, password):
