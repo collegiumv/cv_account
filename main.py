@@ -33,7 +33,8 @@ def init():
                 continue
             configLog.debug("Loaded account record %s", account)
             config["ACL"][account[2]] = [account[1], account[0]]
-
+        configLog.info("Loaded %s account records", len(config["ACL"]))
+        
     with open(os.path.join(configDir, "words.txt"), 'r') as f:
         config["WORDS"] = f.read().split("\n")
         configLog.info("Loaded %s words", len(config["WORDS"]))
@@ -119,6 +120,8 @@ if __name__ == "__main__":
 
     logfile = os.path.join(os.path.abspath("log"), "accountService.log")
     logging.basicConfig(level=logging.INFO, filename=logfile)
+    logging.info("Starting CV Account System")
+
     config = init()
     validate = validate.Validate(config)
     handshake = handshake.Handshake(config)
