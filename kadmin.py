@@ -13,16 +13,20 @@ class KAdmin:
         FNULL = open(os.devnull, 'w')
 
         cmd = ['kadmin','-p'+self.kprinc, '-q', 'addprinc -pw '+password+' '+uid, '-w'+self.kpass]
-        return not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL))
-
+        if not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL)):
+            self.logger.debug("Kerberos Create Success!")
+            return True
+        else:
+            self.logger.error("Kerberos Create Error")
+            return False
 
     def chPassword(self, uid, password):
         FNULL = open(os.devnull, 'w')
 
         cmd = ['kadmin','-p'+self.kprinc, '-q', 'cpw -pw '+password+' '+uid, '-w'+self.kpass]
-        return not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL))
-
-if __name__ == "__main__":
-    o = KAdmin("cv/admin", "a")
-    o.createPrinc("test2", "b")
-    o.changePW("test2", "c")
+        if not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL)):
+            self.logger.debug("Kerberos Change Success!")
+            return True
+        else:
+            self.logger.error("Kerberos Change Error")
+            return False
