@@ -64,8 +64,8 @@ class Handshake:
         s.sendmail(self.replyTo, address, msg.as_string())
         s.quit()
 
-    def sendPassword(self, netID, password):
-        message = "Your password has been set to: " + password + "."
+    def sendPassword(self, netID, user, password):
+        message = "Your login credentials are below:\n" + "Username: " + user + "\nPassword: " + password + "\n\nNote: Usernames AND passwords are case-sensitive!"
         self.sendMail(netID+"@"+self.mailDomain, message)
 
     def compDigest(self, a, b):

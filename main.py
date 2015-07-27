@@ -87,7 +87,7 @@ def provisionAcct(netID, user, hmac, time):
     if handshake.verify(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.provision(netID, user, password):
-            handshake.sendPassword(netID, password)
+            handshake.sendPassword(netID, user, password)
             return json.dumps(True)
         else:
             return json.dumps(False)
@@ -106,7 +106,7 @@ def chPassword(netID, user, hmac, time):
     if handshake.verify(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.chPassword(user, password):
-            handshake.sendPassword(netID, password)
+            handshake.sendPassword(netID, user, password)
             return "Your password has been emailed to you"
         else:
             return "Your password could not be reset, please try again later"
