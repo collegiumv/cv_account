@@ -1,4 +1,9 @@
-import logging, random, ldap, kadmin
+import logging
+import random
+import ldap
+import kadmin
+import socket
+
 
 class Manager:
     def __init__(self, config):
@@ -9,7 +14,8 @@ class Manager:
         self.kadmin = kadmin.KAdmin(config["krb5"]["aprinc"], config["krb5"]["apass"])
         self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.gidNumber = config["SETTINGS"]["userGID"]
-
+        self.fileServerAddress = config["SETTINGS"]["fileServerAddress"]
+        self.fileServerPort = config["SETTINGS"]["fileServerPort"]
 
     def uidExists(self, username):
         conn = self.connectLDAP()
@@ -37,22 +43,22 @@ class Manager:
         ObjectClass = ["inetOrgPerson", "posixAccount", "cvPerson"]
         userDN = "uid="+username+",ou=people,dc=collegiumv,dc=org"
 
-        #create the ldap values
+        # create the ldap values
         ldapAttrs = list()
-        ldapAttrs.append(("objectClass",ObjectClass))
-        ldapAttrs.append(("cn",[fname + ' ' + lname]))
-        ldapAttrs.append(("sn",[lname]))
-        ldapAttrs.append(("ou",["cv"]))
-        ldapAttrs.append(("displayName",[fname + ' ' + lname]))
-        ldapAttrs.append(("givenName",[fname]))
-        ldapAttrs.append(("netID",[str(netID)]))
-        ldapAttrs.append(("mail",[str(netID+'@'+self.mailDomain)]))
-        ldapAttrs.append(('o',["Collegium V"]))
+        ldapAttrs.append(("objectClass", ObjectClass))
+        ldapAttrs.append(("cn", [fname + ' ' + lname]))
+        ldapAttrs.append(("sn", [lname]))
+        ldapAttrs.append(("ou", ["cv"]))
+        ldapAttrs.append(("displayName", [fname + ' ' + lname]))
+        ldapAttrs.append(("givenName", [fname]))
+        ldapAttrs.append(("netID", [str(netID)]))
+        ldapAttrs.append(("mail", [str(netID+'@' + self.mailDomain)]))
+        ldapAttrs.append(('o', ["Collegium V"]))
         ldapAttrs.append(("uid", [str(username)]))
         ldapAttrs.append(("uidNumber", [str(self.nextUID())]))
         ldapAttrs.append(("gidNumber", [str(self.gidNumber)]))
-        ldapAttrs.append(("homeDirectory",[str("/home/" + username)]))
-        ldapAttrs.append(("loginShell",["/bin/bash"]))
+        ldapAttrs.append(("homeDirectory", [str("/home/" + username)]))
+        ldapAttrs.append(("loginShell", ["/bin/bash"]))
 
         conn = self.connectLDAP()
         try:
@@ -67,6 +73,13 @@ class Manager:
             return False
         finally:
             conn.unbind()
+            fileSock = socket.socket()
+            try:
+                fileSock.connect((self.fileServerAddress, self.fileServerPort))
+            except socket.error, e:
+                self.logger.error("FileServer socket error. WARNING")
+            finally:
+                fileSock.close()
             return True
 
     def connectLDAP(self):
