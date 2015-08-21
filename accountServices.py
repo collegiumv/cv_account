@@ -77,7 +77,7 @@ class Manager:
             try:
                 fileSock.connect((self.fileServerAddress, self.fileServerPort))
             except socket.error, e:
-                self.logger.error("FileServer socket error. WARNING")
+                self.logger.error("FileServer socket error: %s", e[1])
             finally:
                 fileSock.close()
             return True
