@@ -107,12 +107,15 @@ function changeListener(){
 }
 
 function changePassword(){
+    $('#provisionButton').prop("disabled", true);
     var url = '/ums/changePassword/' + netID.val()
     httpClient.get( url, function(result){
 	if( result == 'true' ){
 	    $('#success').show()
 	    $('#fail').hide()
+	    alert("Please check your UT Dallas email for further Instructions");
 	} else {
+	    $('#provisionButton').prop("disabled", false);
 	    $('#success').hide()
 	    $('#fail').show()
 	}
@@ -120,7 +123,7 @@ function changePassword(){
 }
 
 function createAccount(){
-    $('#provisionButton').prop("disabled" ,true);
+    $('#provisionButton').prop("disabled", true);
     var url = '/ums/provision/' + netID.val() + "/" + username.val()
     httpClient.get( url, function(result){
 	if( result == 'true' ){
