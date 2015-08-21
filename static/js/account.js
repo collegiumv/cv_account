@@ -113,7 +113,7 @@ function changePassword(){
 	if( result == 'true' ){
 	    $('#success').show()
 	    $('#fail').hide()
-	    alert("Please check your UT Dallas email for further Instructions");
+	    if(!alert('Please check your UT Dallas email for further Instructions.')){window.location.reload();}
 	} else {
 	    $('#provisionButton').prop("disabled", false);
 	    $('#success').hide()
@@ -129,7 +129,7 @@ function createAccount(){
 	if( result == 'true' ){
 	    $('#success').show()
 	    $('#fail').hide()
-	    alert("Please check your UT Dallas email for further Instructions");
+	    if(!alert('Please check your UT Dallas email for further Instructions.')){window.location.reload();}
 	} else {
 	    $('#provisionButton').prop("disabled", false);
 	    $('#success').hide()
