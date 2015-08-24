@@ -4,7 +4,6 @@ import ldap
 import kadmin
 import socket
 
-
 class Manager:
     def __init__(self, config):
         self.loungeACL = config["ACL"]
@@ -36,8 +35,10 @@ class Manager:
         result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(netID={0})".format(netID), attrlist=["uid"])
         conn.unbind()
         return result[0][1]['uid'][0]
-        
+
     def provision(self, netID, username, password):
+        success=False
+
         fname = self.loungeACL[netID][0]
         lname = self.loungeACL[netID][1]
         ObjectClass = ["inetOrgPerson", "posixAccount", "cvPerson"]
@@ -64,15 +65,10 @@ class Manager:
         try:
             conn.add_s(userDN, ldapAttrs)
             if self.kadmin.createPrinc(username, password):
-                self.logger.info("Sucessfully provisioned account %s for %s", username, netID)
+                self.logger.info("Successfully provisioned account %s for %s", username, netID)
             else:
                 self.logger.error("Kerberos Error on account %s", username)
-                return False
-        except ldap.LDAPError as e:
-            self.logger.error("An ldap error has occured, %s", e)
-            return False
-        finally:
-            conn.unbind()
+
             fileSock = socket.socket()
             try:
                 fileSock.connect((self.fileServerAddress, self.fileServerPort))
@@ -80,7 +76,13 @@ class Manager:
                 self.logger.error("FileServer socket error. WARNING")
             finally:
                 fileSock.close()
-            return True
+            success=True
+        except ldap.LDAPError as e:
+            self.logger.error("An ldap error has occured, %s", e)
+        finally:
+            conn.unbind()
+            return success
+
 
     def connectLDAP(self):
         try:
@@ -93,7 +95,7 @@ class Manager:
             except ldap.INVALID_CREDENTIALS:
                 self.logger.severe("Invalid LDAP credentials")
             except ldap.LDAPError as e:
-                self.logger.error("LDAP Error: %s", e)            
+                self.logger.error("LDAP Error: %s", e)
         except:
             self.logger.error("An unidentified error occured in LDAP")
         return conn
@@ -114,30 +116,30 @@ class Manager:
         conn.unbind()
         return num+1
 
-    def getLastuidNumber(self, baseNum=0, sock=None):
-        result = list()
-        searchID = sock.search("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(uidNumber>={0})".format(baseNum), attrlist=["uidNumber"])
+    def getLastuidNumber(self, sock = None):
+        # this function courtesy of justanull
+        lastIndex = 0
+        highestUid = 0
         while True:
-            try:
-                result.append(sock.result(searchID, all=0, timeout=2))
-            except (ldap.TIMEOUT, ldap.SIZELIMIT_EXCEEDED):
-                break
-                
-        # Get the last result, assuming the list is ordered
-        if result[-1][1]==list():
-            # this handles the timeout condition
-            lastResult = result[-2]
-        else:
-            lastResult = result[-1]
-    
-        # I sincerely appologize for this index maze, it was necessary
-        # to avoid using a large number of temp variables to store
-        # data I had no intent of using.  The end output is the last
-        # uidNumber to be returned, we assume the result set to be
-        # both well defined, and ordered, otherwise this doesn't work
-        lastUID = int(lastResult[1][0][1][lastResult[1][0][1].keys()[-1]][0])
-            
-        if lastUID > baseNum:
-            return self.getLastuidNumber(lastUID, sock)
-        else:
-            return lastUID
+            searchID = sock.search("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(uidNumber>={0})".format(lastIndex), attrlist = ["uidNumber"])
+            while True:
+                try:
+                    tempResults = list()
+                    tempResults.append(sock.result(searchID, all = 0, timeout = 2))
+
+                    if len(tempResults[0][1]) == 0:
+                        # oh god why
+                        return highestUid
+
+                    if tempResults[-1][1] == list():
+                        tempResults = tempResults[:-1]
+
+                    for entry in tempResults:
+                        for uidEntry in entry[1][0][1].values():
+                            uid = int(uidEntry[0])
+                            lastIndex = uid
+                            if uid > highestUid:
+                                highestUid = uid
+
+                except (ldap.TIMEOUT, ldap.SIZELIMIT_EXCEEDED):
+                    break
