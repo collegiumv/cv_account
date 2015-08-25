@@ -88,9 +88,9 @@ def provisionAcct(netID, user, hmac, time):
         password = acctMgr.mkPassword()
         if acctMgr.provision(netID, user, password):
             handshake.sendPassword(netID, user, password)
-            return json.dumps(True)
+            return json.dumps("Your password has been emailed to you")
         else:
-            return json.dumps(False)
+            return json.dumps("An error occured, please contact an admin")
 
 
 @app.route("/ums/changePassword/<netID>")
