@@ -60,6 +60,7 @@ class Manager:
         ldapAttrs.append(("gidNumber", [str(self.gidNumber)]))
         ldapAttrs.append(("homeDirectory", [str("/home/" + username)]))
         ldapAttrs.append(("loginShell", ["/bin/bash"]))
+        ldapAttrs.append(("desktopEnvironment", ["Lubuntu"]))
 
         conn = self.connectLDAP()
         try:
