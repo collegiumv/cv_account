@@ -12,9 +12,16 @@ import os
 app = Flask(__name__)
 app.debug = False
 
+# Quiet down the web requests router
 weblog = logging.getLogger('werkzeug')
 weblog.setLevel(logging.ERROR)
 
+# Perform Log setup
+if not os.path.isdir("log"):
+    os.mkdir("log")
+logfile = os.path.join(os.path.abspath("log"), "accountService.log")
+logging.basicConfig(level=logging.INFO, filename=logfile)
+logging.info("Starting CV Account System")
 
 def init():
     configLog = logging.getLogger("config")
@@ -34,7 +41,7 @@ def init():
             configLog.debug("Loaded account record %s", account)
             config["ACL"][account[2]] = [account[1], account[0]]
         configLog.info("Loaded %s account records", len(config["ACL"]))
-        
+
     with open(os.path.join(configDir, "words.txt"), 'r') as f:
         config["WORDS"] = [ s.strip() for s in f.read().split("\n") ]
         configLog.info("Loaded %s words", len(config["WORDS"]))
@@ -50,9 +57,9 @@ def init():
 def index():
     return render_template('index.html')
 
-
+@app.route("/version")
 def version():
-    return "CV Account System - Version 0.0.1"
+    return "CV Account System - Version 0.0.2"
 
 
 @app.route("/ums/validate/netID/<netID>")
@@ -113,19 +120,18 @@ def chPassword(netID, user, hmac, time):
     else:
         return "An error occured, perhaps you have an old link?"
 
+# ------------- Begin Program Setup --------------
+# Perform global config loading
+config = init()
+
+# Create core objects
+validate = validate.Validate(config)
+handshake = handshake.Handshake(config)
+acctMgr = accountServices.Manager(config)
+
+
+# If we're being loaded without uwsgi, configure the internal server
 if __name__ == "__main__":
-    if not os.path.isdir("log"):
-        os.mkdir("log")
-
-    logfile = os.path.join(os.path.abspath("log"), "accountService.log")
-    logging.basicConfig(level=logging.INFO, filename=logfile)
-    logging.info("Starting CV Account System")
-
-    config = init()
-    validate = validate.Validate(config)
-    handshake = handshake.Handshake(config)
-    acctMgr = accountServices.Manager(config)
-
     host = config["SETTINGS"]["serverAddr"].split(":")[0]
     port = int(config["SETTINGS"]["serverAddr"].split(":")[1]) or 5000
     app.run(host, port)
