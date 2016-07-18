@@ -1,22 +1,23 @@
 {% extends "layout.html" %}
 {% block body %}
+<h2>Manage Your CV Account</h2>
+<div id="enterNetID" class="row inputRow">
+	<div class="inputGroup medium-6 columns">
+		<input type="text" id="netID" name="netID" autocomplete="off" required="">
+		<span class="bar"></span>
+		<label>NetID</label>
+	</div>
+	<button id="changePassword" type="submit" class="button is-hidden" value="Change Password" onclick="changePassword()">Change Password</button>
+	<span id="netID-error" class="form-error is-hidden medium-6 columns">A NetID enrolled in the CollegumV Honors Program is required.</span>
+</div>
+<div id="provisionAccount" class="row inputRow is-hidden">
+	<div class="inputGroup medium-6 columns">
+		<input type="text" id="username" name="username" autocomplete="off" required="">
+		<span class="bar"></span>
+		<label>Username</label>
+	</div>
+	<button id="provisionButton" class="button is-hidden" value="Create Account" onclick="createAccount()">Create Account</button>
+	<span id="username-error" class="form-error is-hidden medium-6 columns">This username is not available.  Try a different one.</span>
+</div>
 
-	<h4 id="success">Please check your UT Dallas email for further Instructions</h4>
-	<h4 id="fail">An error occurred. Please contact cvadmins@utdallas.edu or try again later</h4>
-	<div id="netid" >
-	<h3>Please enter your Net ID:</h3>
-	<input type="text" id="netID" placeholder="NetID" name="netID">
-	</div>
-	<div id="changePassword" >
-		<input type="submit" class="button" value="Change Password" onclick="changePassword()">
-	</div>
-	<div id="provisionAccount" >
-		<h3>Please enter a Username:</h3>
-		<h4 id="usernameTaken">This username has been taken. Try a different one.</h4>
-		<input type="text" id="username" placeholder="foobar" name="username" >
-		<input type="submit" id="provisionButton" class="button" value="Create Account" onclick="createAccount()">
-	</div>
-
-<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-<script src={{ url_for('static', filename='js/account.js') }}></script>
 {% endblock %}

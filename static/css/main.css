@@ -1,0 +1,417 @@
+/**
+ * Reset some basic elements
+ */
+body, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, hr,
+dl, dd, ol, ul, figure {
+    margin: 0;
+    padding: 0;
+}
+
+/**
+ * Basic styling
+ */
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 300;
+    color: #111;
+    background-color: #fdfdfd;
+    -webkit-text-size-adjust: 100%;
+    max-width: -webkit-calc(800px - (30px * 2));
+    max-width: calc(800px - (30px * 2));
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+@media screen and (max-width: 800px) {
+    body {
+        max-width: -webkit-calc(800px - (30px));
+        max-width: calc(800px - (30px));
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+}
+
+/**
+ * Set `margin-bottom` to maintain vertical rhythm
+ */
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+ul, ol, dl, figure,
+.highlight {
+    margin-bottom: 15px;
+}
+
+/**
+ * Images
+ */
+img {
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+/**
+ * Figures
+ */
+figure > img {
+    display: block;
+}
+
+figcaption {
+    font-size: 14px;
+}
+
+/**
+ * Lists
+ */
+ul, ol {
+    margin-left: 30px;
+}
+
+li > ul,
+li > ol {
+    margin-bottom: 0;
+}
+
+/**
+ * Headings
+ */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+}
+
+/**
+ * Links
+ */
+a {
+    color: #2a7ae2;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #1756a9;
+}
+
+a:hover {
+    color: #111;
+    text-decoration: underline;
+}
+
+/**
+ * Blockquotes
+ */
+blockquote {
+    color: #828282;
+    border-left: 4px solid #e8e8e8;
+    padding-left: 15px;
+    font-size: 18px;
+    letter-spacing: -1px;
+    font-style: italic;
+}
+
+blockquote > :last-child {
+    margin-bottom: 0;
+}
+
+/**
+ * Code formatting
+ */
+pre,
+code {
+    font-size: 15px;
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    background-color: #eef;
+}
+
+code {
+    padding: 1px 5px;
+}
+
+pre {
+    padding: 8px 12px;
+    overflow-x: scroll;
+}
+pre > code {
+    border: 0;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+/**
+ * Clearfix
+ */
+body:after, .site-footer:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/**
+ * Icons
+ */
+.icon > svg {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.icon > svg path {
+    fill: #828282;
+}
+
+/**
+ * Site header
+ */
+.site-header {
+    border-bottom: 2px solid #e8e8e8;
+    height: 56px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.site-title {
+    font-size: 26px;
+    line-height: 56px;
+    letter-spacing: -1px;
+    float: left;
+}
+
+.site-title, .site-title:visited {
+    color: #424242;
+}
+
+#header_image {
+    padding: 10px;
+}
+
+#navbar {
+    color: #111;
+    height: 20px;
+    padding: 4px;
+    position: relative;
+    float: left;
+    margin-top: 55px;
+    margin-left: -130px;
+}
+
+#navbar a {
+    color: #111;
+    padding-right: 8px;
+    /* border-right: 1px solid #777; */
+}
+
+#navbar a:last-child {
+    border-right: none;
+}
+
+.site-nav {
+    float: right;
+    line-height: 56px;
+}
+
+.site-nav .menu-icon {
+    display: none;
+}
+
+.site-nav .page-link {
+    color: #111;
+    line-height: 1.5;
+}
+
+.site-nav .page-link:not(:first-child) {
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    .site-nav {
+        position: absolute;
+        top: 9px;
+        right: 30px;
+        background-color: #fdfdfd;
+        border: 1px solid #e8e8e8;
+        border-radius: 5px;
+        text-align: right;
+    }
+    
+    .site-nav .menu-icon {
+        display: block;
+        float: right;
+        width: 36px;
+        height: 26px;
+        line-height: 0;
+        padding-top: 10px;
+        text-align: center;
+    }
+    
+    .site-nav .menu-icon > svg {
+        width: 18px;
+        height: 15px;
+    }
+    
+    .site-nav .menu-icon > svg path {
+        fill: #424242;
+    }
+    
+    .site-nav .trigger {
+        clear: both;
+        display: none;
+    }
+    
+    .site-nav:hover .trigger {
+        display: block;
+        padding-bottom: 5px;
+    }
+    
+    .site-nav .page-link {
+        display: block;
+        padding: 5px 10px;
+    }
+}
+
+/**
+ * Site footer
+ */
+.site-footer {
+    border-top: 2px solid #e8e8e8;
+    padding: 30px 0;
+    font-size: 15px;
+    color: #828282;
+}
+
+.social-media-list {
+    list-style: none;
+    margin-left: 0;
+    text-align: right;
+}
+
+/**
+ * Page content
+ */
+.page-content {
+    padding: 30px 0;
+}
+
+.page-heading {
+    font-size: 20px;
+}
+
+.post-list {
+    margin-left: 0;
+    list-style: none;
+}
+
+.post-list > li {
+    margin-bottom: 30px;
+}
+
+.post-meta {
+    font-size: 14px;
+    color: #828282;
+}
+
+.post-link {
+    display: block;
+    font-size: 24px;
+}
+
+/**
+ * Posts
+ */
+.post-header {
+    margin-bottom: 30px;
+}
+
+.post-title {
+    font-size: 42px;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+
+@media screen and (max-width: 800px) {
+    .post-title {
+        font-size: 36px;
+    }
+}
+
+.post-content {
+    margin-bottom: 30px;
+}
+
+.post-content h2 {
+    font-size: 32px;
+}
+
+@media screen and (max-width: 800px) {
+    .post-content h2 {
+        font-size: 28px;
+    }
+}
+
+.post-content h3 {
+    font-size: 26px;
+}
+
+@media screen and (max-width: 800px) {
+    .post-content h3 {
+        font-size: 22px;
+    }
+}
+
+.post-content h4 {
+    font-size: 20px;
+}
+
+@media screen and (max-width: 800px) {
+    .post-content h4 {
+        font-size: 18px;
+    }
+}
+
+/**
+ * Custom
+ */
+.irc {
+    color: #008000;
+}
+
+.icon--irc {
+    width: 16px;
+    text-align: center;
+    display: inline-block;
+    color: #828282;
+    font-weight: 700;
+}
+
+.right {
+    float: right;
+    line-height: 80px;
+}
+
+@media screen and (max-width: 600px) {
+    .right {
+        display: none;
+    }
+}
+
+.right a {
+    color: #424242;
+    text-decoration: none;
+}
+
+hr {
+    height: 1px;
+    color: #E8E8E8;
+    background: none repeat scroll 0% 0% #E8E8E8;
+    font-size: 0px;
+    border: 0px none;
+}
+
+.center {
+    text-align: center;
+}

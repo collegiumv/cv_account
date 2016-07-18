@@ -1,0 +1,156 @@
+.menu > li.over-logo {
+    display:inline;
+}
+
+li.over-logo > a {
+    padding: 0;
+    margin-left: -80px;
+    margin-top: -20px;
+    margin-bottom: -60px;
+}
+
+li.menu-text > a {
+    padding: 0;
+}
+
+.top-bar-right > ul > li > a {
+    font-size:95%
+}
+
+.no-js .top-bar {
+    display: none;
+}
+
+@media screen and (min-width: 40em) {
+    .no-js .top-bar {
+        display: block;
+    }
+
+    .no-js .title-bar {
+        display: none;
+    }
+}
+
+@media screen and (max-width:73em) and (min-width: 40em) {
+    .row{
+        margin-left: 70px;
+        margin-right: 70px;
+    }
+}
+
+/* Mobile-specific menu customizations */
+@media (max-width: 40em){
+    .title-bar, .top-bar, .top-bar ul {
+        background-color: #2e5b8a;
+    }
+
+    .top-bar ul > li > a {
+        color: #ffffff;
+    }
+
+    .top-bar ul > li:hover {
+        background-color: #3e6b9a;
+    }
+
+    .top-bar ul > li > a:hover {
+        color: #e0e0e0;
+    }
+}
+
+/* Account-specific CSS */
+.inputRow {
+    position: relative;
+}
+
+.inputRow button{
+    margin: 3.5rem 0 0 0;
+}
+
+.form-error {
+    font-size:.9rem;
+}
+
+@media screen and (max-width: 40em) {
+    .inputRow button{
+        width:100%;
+    }
+}
+
+@media screen and (min-width: 40em) {
+    .form-error{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.inputGroup {
+    position:relative;
+    margin-bottom:1rem;
+    margin-top:3rem;
+}
+
+.inputGroup input {
+    font-size:2rem;
+    padding: 0;
+    height:3rem;
+    vertical-align: middle;
+    display:block;
+    width:100%;
+    border:none;
+    border-bottom:1px solid #757575;
+    box-shadow: none;
+    border-radius:0;
+    margin: 0.5rem 0 0 0;
+}
+.inputGroup input:focus {
+    outline:none;
+    box-shadow: none;
+    border: none;
+}
+
+.inputGroup label {
+    color:#999;
+    font-size:2rem;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:1rem;
+    top:0;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+}
+
+.inputGroup input:focus ~ label, .inputGroup input:valid ~ label {
+    top:-2.5rem;
+    font-size:1.7rem;
+    color:#2e5b8a;
+}
+
+.inputGroup .bar {
+    position:relative;
+    display:block;
+    width:100%;
+}
+.inputGroup .bar:before, .inputGroup .bar:after {
+    content:'';
+    height:2px;
+    width:0;
+    bottom:1px;
+    position:absolute;
+    background:#2e5b8a;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+}
+.inputGroup .bar:before {
+    left:50%;
+}
+.inputGroup .bar:after {
+    right:50%;
+}
+
+.inputGroup input:focus ~ .bar:before, .inputGroup input:focus ~ .bar:after {
+    width:50%;
+}

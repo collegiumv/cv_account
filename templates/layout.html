@@ -1,16 +1,46 @@
 <!doctype html>
-<head>
-	<title>CV Accounts Webpage</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-	<div id="container">
-		<div id="header"></div>
-		<div id="main" >
-			<div id="content" >
-				{% block body %}{% endblock %}
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Collegium V - Accounts</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/sweetalert.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+	</head>
+	<body>
+		<div class="title-bar" data-responsive-toggle="main_menu" data-hide-for="medium">
+			<button class="menu-icon" type="button" data-toggle></button>
+			<div class="title-bar-title">Collegium V</div>
+		</div>
+		<div class="top-bar small-12" id="main_menu">
+			<div class="row">
+				<div class="top-bar-left stacked-for-small">
+					<ul class="dropdown vertical medium-horizontal menu" data-dropdown-menu>
+						<li class="hide-for-small-only menu-text"><a href="http://collegiumv.org/">Collegium V</a></li>
+						<li><a href="http://collegiumv.org/">Home</a></li>
+						<li><a href="http://account.collegiumv.org/">Accounts</a></li>
+						<li><a href="http://irc.collegiumv.org">IRC</a></li>
+						<li><a href="http://collegiumv.librarika.com/search/">Library</a></li>
+						<li><a href="http://doc.collegiumv.org/">Docs</a></li>
+					</ul>
+				</div>
+				<div class="show-for-large top-bar-right">
+					<ul class="menu">
+						<li><a href="http://www.utdallas.edu/">The University of Texas at Dallas</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
-	</div>
-</body>
+		<br/>
+		<div class="row">
+			{% block body %}{% endblock %}
+		</div>
+		<script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/vendor/what-input.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/vendor/foundation.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/vendor/sweetalert.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+	</body>
+</html>
