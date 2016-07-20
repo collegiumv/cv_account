@@ -4,15 +4,15 @@ import os
 
 
 class KAdmin:
-    def __init__(self, kprinc, kpass):
+    def __init__(self, kprinc, ktab):
         self.kprinc = kprinc
-        self.kpass = kpass
+        self.ktab = ktab
         self.logger = logging.getLogger("pyKAdmin")
 
     def createPrinc(self, uid, password):
         FNULL = open(os.devnull, 'w')
 
-        cmd = ['kadmin','-p'+self.kprinc, '-q', 'addprinc -pw '+password+' '+uid, '-w'+self.kpass]
+        cmd = ['kadmin','-p'+self.kprinc, '-q', 'addprinc -pw '+password+' '+uid, '-k', '-t'+self.ktab]
         if not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL)):
             self.logger.debug("Kerberos Create Success!")
             return True
@@ -23,7 +23,7 @@ class KAdmin:
     def chPassword(self, uid, password):
         FNULL = open(os.devnull, 'w')
 
-        cmd = ['kadmin','-p'+self.kprinc, '-q', 'cpw -pw '+password+' '+uid, '-w'+self.kpass]
+        cmd = ['kadmin','-p'+self.kprinc, '-q', 'cpw -pw '+password+' '+uid, '-k', '-t'+self.ktab]
         if not bool(subprocess.call(cmd, shell=False, stdout=FNULL, stderr=FNULL)):
             self.logger.debug("Kerberos Change Success!")
             return True

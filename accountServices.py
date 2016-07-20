@@ -10,7 +10,7 @@ class Manager:
         self.config = config
         self.words = config["WORDS"]
         self.logger = logging.getLogger("AcctServices")
-        self.kadmin = kadmin.KAdmin(config["krb5"]["aprinc"], config["krb5"]["apass"])
+        self.kadmin = kadmin.KAdmin(config["krb5"]["aprinc"], config["krb5"]["atab"])
         self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.gidNumber = config["SETTINGS"]["userGID"]
         self.fileServerAddress = config["SETTINGS"]["fileServerAddress"]
