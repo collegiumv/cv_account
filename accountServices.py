@@ -54,9 +54,11 @@ class Manager:
         ldapAttrs.append(("givenName", [fname]))
         ldapAttrs.append(("netID", [str(netID)]))
         ldapAttrs.append(("mail", [str(netID+'@' + self.mailDomain)]))
-        ldapAttrs.append(('o', ["Collegium V"]))
+        ldapAttrs.append(("o", ["Collegium V"]))
         ldapAttrs.append(("uid", [str(username)]))
         ldapAttrs.append(("uidNumber", [str(self.nextUID())]))
+        ldapAttrs.append(("userPassword", ["{{SASL}}{0}@COLLEGIUMV.ORG"
+                                           .format(username)]))
         ldapAttrs.append(("gidNumber", [str(self.gidNumber)]))
         ldapAttrs.append(("homeDirectory", [str("/home/" + username)]))
         ldapAttrs.append(("loginShell", ["/bin/bash"]))
