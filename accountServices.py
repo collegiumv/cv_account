@@ -4,13 +4,15 @@ import ldap
 import kadmin
 import socket
 
+
 class Manager:
     def __init__(self, config):
         self.loungeACL = config["ACL"]
         self.config = config
         self.words = config["WORDS"]
         self.logger = logging.getLogger("AcctServices")
-        self.kadmin = kadmin.KAdmin(config["krb5"]["aprinc"], config["krb5"]["atab"])
+        self.kadmin = kadmin.KAdmin(config["krb5"]["aprinc"],
+                                    config["krb5"]["atab"])
         self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.gidNumber = config["SETTINGS"]["userGID"]
         self.fileServerAddress = config["SETTINGS"]["fileServerAddress"]
@@ -18,26 +20,33 @@ class Manager:
 
     def uidExists(self, username):
         conn = self.connectLDAP()
-        result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(uid={0})".format(username), attrlist=["uid"])
+        result = conn.search_s("ou=people,dc=collegiumv,dc=org",
+                               ldap.SCOPE_SUBTREE,
+                               "(uid={0})".format(username), attrlist=["uid"])
         conn.unbind()
         self.logger.debug("Account %s exists? %s", username, bool(len(result)))
         return bool(len(result))
 
     def netIDExists(self, netID):
         conn = self.connectLDAP()
-        result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(netID={0})".format(netID), attrlist=["netID"])
+        result = conn.search_s("ou=people,dc=collegiumv,dc=org",
+                               ldap.SCOPE_SUBTREE,
+                               "(netID={0})".format(netID),
+                               attrlist=["netID"])
         conn.unbind()
         self.logger.debug("Account %s exists? %s", netID, bool(len(result)))
         return bool(len(result))
 
     def uidFromNetID(self, netID):
         conn = self.connectLDAP()
-        result = conn.search_s("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(netID={0})".format(netID), attrlist=["uid"])
+        result = conn.search_s("ou=people,dc=collegiumv,dc=org",
+                               ldap.SCOPE_SUBTREE,
+                               "(netID={0})".format(netID), attrlist=["uid"])
         conn.unbind()
         return result[0][1]['uid'][0]
 
     def provision(self, netID, username, password):
-        success=False
+        success = False
 
         fname = self.loungeACL[netID][0]
         lname = self.loungeACL[netID][1]
@@ -68,7 +77,8 @@ class Manager:
         try:
             conn.add_s(userDN, ldapAttrs)
             if self.kadmin.createPrinc(username, password):
-                self.logger.info("Successfully provisioned account %s for %s", username, netID)
+                self.logger.info("Successfully provisioned account %s for %s",
+                                 username, netID)
             else:
                 self.logger.error("Kerberos Error on account %s", username)
 
@@ -79,13 +89,12 @@ class Manager:
                 self.logger.error("FileServer socket error: %s", e[1])
             finally:
                 fileSock.close()
-            success=True
+            success = True
         except ldap.LDAPError as e:
             self.logger.error("An ldap error has occured, %s", e)
         finally:
             conn.unbind()
             return success
-
 
     def connectLDAP(self):
         try:
@@ -108,8 +117,8 @@ class Manager:
 
     def mkPassword(self):
         self.logger.debug("Made a password")
-        password=""
-        for i in range(0,4):
+        password = ""
+        for i in range(0, 4):
             password += random.choice(self.words).capitalize()
         return password
 
@@ -119,16 +128,19 @@ class Manager:
         conn.unbind()
         return num+1
 
-    def getLastuidNumber(self, sock = None):
+    def getLastuidNumber(self, sock=None):
         # this function courtesy of justanull
         lastIndex = 0
         highestUid = 0
         while True:
-            searchID = sock.search("ou=people,dc=collegiumv,dc=org", ldap.SCOPE_SUBTREE, "(uidNumber>={0})".format(lastIndex), attrlist = ["uidNumber"])
+            searchID = sock.search("ou=people,dc=collegiumv,dc=org",
+                                   ldap.SCOPE_SUBTREE,
+                                   "(uidNumber>={0})".format(lastIndex),
+                                   attrlist=["uidNumber"])
             while True:
                 try:
                     tempResults = list()
-                    tempResults.append(sock.result(searchID, all = 0, timeout = 2))
+                    tempResults.append(sock.result(searchID, all=0, timeout=2))
 
                     if len(tempResults[0][1]) == 0:
                         # oh god why
