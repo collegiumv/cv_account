@@ -46,6 +46,10 @@ def init():
         config["WORDS"] = [ s.strip() for s in f.read().split("\n") ]
         configLog.info("Loaded %s words", len(config["WORDS"]))
 
+    with open(os.path.join(configDir, "blacklist.txt"), 'r') as f:
+        config["BLACKLIST"] = [ s.strip() for s in f.read().split("\n") ]
+        configLog.info("Loaded %s blacklisted phrases", len(config["BLACKLIST"]))
+
     with open(os.path.join(configDir, "settings.json"), 'r') as f:
         config.update(json.load(f))
         configLog.info("Loaded config file")
