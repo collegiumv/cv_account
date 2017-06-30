@@ -43,11 +43,11 @@ def init():
         configLog.info("Loaded %s account records", len(config["ACL"]))
 
     with open(os.path.join(configDir, "words.txt"), 'r') as f:
-        config["WORDS"] = [ s.strip() for s in f.read().split("\n") ]
+        config["WORDS"] = [s.strip() for s in f.readlines()]
         configLog.info("Loaded %s words", len(config["WORDS"]))
 
     with open(os.path.join(configDir, "blacklist.txt"), 'r') as f:
-        config["BLACKLIST"] = [ s.strip() for s in f.read().split("\n") ]
+        config["BLACKLIST"] = [s.strip() for s in f.readlines()]
         configLog.info("Loaded %s blacklisted phrases", len(config["BLACKLIST"]))
 
     with open(os.path.join(configDir, "settings.json"), 'r') as f:
