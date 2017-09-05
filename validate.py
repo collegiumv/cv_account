@@ -15,7 +15,7 @@ class Validate:
             return False
 
     def user(self, user):
-        uValid = re.compile(ur'^[A-Za-z0-9.-_]{1,30}$')
+        uValid = re.compile(ur'^[A-Za-z][A-Za-z0-9.\-_]{0,29}$')
         if re.search(uValid, user):
             self.logger.debug("User %s passed regex check", user)
             if (user.lower() == "root" or user.lower() == "admin"):
