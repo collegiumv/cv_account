@@ -3,7 +3,7 @@ import random
 import ldap
 import kadmin
 import socket
-
+from papercut import PaperCut
 
 class Manager:
     def __init__(self, config):
@@ -17,6 +17,7 @@ class Manager:
         self.gidNumber = config["SETTINGS"]["userGID"]
         self.fileServerAddress = config["SETTINGS"]["fileServerAddress"]
         self.fileServerPort = config["SETTINGS"]["fileServerPort"]
+        self.pc = PaperCut(config["papercut"]["url"], config["papercut"]["secret"])
 
     def uidExists(self, username):
         conn = self.connectLDAP()
@@ -94,6 +95,7 @@ class Manager:
             self.logger.error("An ldap error has occured, %s", e)
         finally:
             conn.unbind()
+            self.pc.performUserAndGroupSync()
             return success
 
     def connectLDAP(self):
