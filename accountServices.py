@@ -11,8 +11,8 @@ class Manager:
         self.config = config
         self.words = config["WORDS"]
         self.logger = logging.getLogger("AcctServices")
-        self.kadmin = kadmin.KAdmin(config["krb5"]["aprinc"],
-                                    config["krb5"]["atab"])
+        self.kadm = kadmin.init_with_keytab(config["krb5"]["aprinc"],
+                                            config["krb5"]["atab"])
         self.mailDomain = config["SETTINGS"]["mailDomain"]
         self.gidNumber = config["SETTINGS"]["userGID"]
         self.fileServerAddress = config["SETTINGS"]["fileServerAddress"]
@@ -77,7 +77,7 @@ class Manager:
         conn = self.connectLDAP()
         try:
             conn.add_s(userDN, ldapAttrs)
-            if self.kadmin.createPrinc(username, password):
+            if self.kadm.addprinc(username, password):
                 self.logger.info("Successfully provisioned account %s for %s",
                                  username, netID)
             else:
@@ -115,7 +115,7 @@ class Manager:
         return conn
 
     def chPassword(self, username, password):
-        return self.kadmin.chPassword(username, password)
+        return self.kadm.get_princ(username).change_password(password)
 
     def mkPassword(self):
         self.logger.debug("Made a password")
